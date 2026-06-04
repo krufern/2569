@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 ระบบตรวจรักการอ่าน — ครูเฟิร์น</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a7a5e;
+    --green-light: #e8f5f1;
+    --green-mid: #2da882;
+    --green-soft: #b8e8db;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red-light: #fee2e2;
+    --red: #dc2626;
+    --ink: #1a1a2e;
+    --ink-soft: #4a4a6a;
+    --ink-muted: #8888aa;
+    --surface: #f7f9f8;
+    --white: #ffffff;
+    --border: #e2ece8;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(26,122,94,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,122,94,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--green);
+    color: white;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 16px rgba(26,122,94,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo { font-size: 24px; }
+  .header-title { font-size: 17px; font-weight: 600; letter-spacing: 0.2px; }
+  .header-sub { font-size: 12px; opacity: 0.75; margin-top: 1px; }
+  .header-badge {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ── Layout ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+  .tab-btn {
+    padding: 9px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    background: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn:hover { border-color: var(--green-mid); color: var(--green); }
+  .tab-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+    box-shadow: 0 2px 10px rgba(26,122,94,0.3);
+  }
+  .tab-icon { font-size: 16px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── Cards ── */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.25rem;
+  }
+  .card-title {
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1.5px solid var(--green-light);
+  }
+  .card-title .icon { font-size: 18px; }
+
+  /* ── Stats ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .stat-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0;
+    height: 3px;
+    background: var(--green-mid);
+  }
+  .stat-box.amber::before { background: var(--amber); }
+  .stat-box.soft::before { background: var(--green-soft); }
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--green); line-height: 1; }
+  .stat-box.amber .stat-value { color: var(--amber); }
+
+  /* ── Form ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.span2 { grid-column: span 2; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.3px; }
+  .field input, .field select, .field textarea {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(45,168,130,0.12);
+    background: white;
+  }
+  .field textarea { resize: vertical; min-height: 72px; }
+  .field select { cursor: pointer; }
+
+  /* ── Nickname highlight in select ── */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 24px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex; align-items: center; gap: 7px;
+    box-shadow: 0 2px 8px rgba(26,122,94,0.25);
+  }
+  .btn-primary:hover { background: #156b52; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,122,94,0.3); }
+  .btn-secondary {
+    background: white;
+    color: var(--ink-soft);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-secondary:hover { border-color: var(--green-mid); color: var(--green); }
+
+  /* ── Table ── */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead { background: var(--green-light); }
+  thead th {
+    padding: 11px 14px; text-align: left;
+    font-size: 11px; font-weight: 700;
+    color: var(--green); letter-spacing: 0.4px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--green-soft);
+    white-space: nowrap;
+  }
+  tbody tr { transition: background .12s; }
+  tbody tr:hover td { background: var(--green-light); }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f5f3;
+    vertical-align: middle;
+    color: var(--ink);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .num-cell { text-align: center; font-weight: 600; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-amber { background: var(--amber-light); color: #92400e; }
+  .badge-gray { background: #f1f5f9; color: #64748b; }
+  .badge-red { background: var(--red-light); color: var(--red); }
+
+  /* ── Nickname tag ── */
+  .nick {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  /* ── Search ── */
+  .search-wrap { position: relative; margin-bottom: 1rem; }
+  .search-wrap input {
+    font-family: inherit; font-size: 14px;
+    padding: 10px 14px 10px 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    width: 100%; background: white; color: var(--ink); outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search-wrap input:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,168,130,0.12); }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--ink-muted); }
+
+  /* ── Detail view ── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: none; font-family: inherit;
+    font-size: 14px; color: var(--green); cursor: pointer;
+    font-weight: 500; margin-bottom: 1.25rem;
+    padding: 6px 12px 6px 0;
+  }
+  .back-btn:hover { opacity: 0.75; }
+  .avatar-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px;
+    background: var(--green-light); color: var(--green);
+    border: 2.5px solid var(--green-soft);
+    flex-shrink: 0;
+  }
+
+  /* ── Progress bar ── */
+  .prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .prog-name { width: 150px; font-size: 13px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .prog-nick { font-size: 11px; color: var(--ink-muted); }
+  .prog-bar-wrap { flex: 1; background: var(--green-light); border-radius: 99px; height: 8px; }
+  .prog-bar-fill { height: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--green-mid), var(--green)); transition: width .4s ease; min-width: 4px; }
+  .prog-pages { font-size: 12px; color: var(--ink-soft); min-width: 52px; text-align: right; font-weight: 600; }
+
+  /* ── Delete btn ── */
+  .del-btn {
+    background: none; border: 1px solid #fca5a5; border-radius: 6px;
+    padding: 4px 8px; cursor: pointer; color: var(--red);
+    font-size: 13px; transition: all .15s;
+  }
+  .del-btn:hover { background: var(--red-light); }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--ink); color: white;
+    padding: 12px 20px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 500;
+    opacity: 0; transform: translateY(8px);
+    transition: all .25s; pointer-events: none; z-index: 999;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: var(--green); }
+  .toast.error { background: var(--red); }
+
+  /* ── Empty ── */
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-muted); }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid.three { grid-template-columns: 1fr; }
+    .field.span2 { grid-column: span 1; }
+    header { padding: 0 1rem; }
+    .main { padding: 1rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-logo">📚</span>
+    <div>
+      <div class="header-title">ระบบตรวจรักการอ่าน</div>
+      <div class="header-sub">ครูเฟิร์น • ปีการศึกษา 2568</div>
+    </div>
+  </div>
+  <div class="header-badge">👩‍🏫 40 คน</div>
+</header>
+
+<div class="main">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('teacher')"><span class="tab-icon">✏️</span> บันทึกงาน</button>
+    <button class="tab-btn" onclick="switchTab('students')"><span class="tab-icon">👥</span> นักเรียน</button>
+    <button class="tab-btn" onclick="switchTab('summary')"><span class="tab-icon">📊</span> ภาพรวม</button>
+  </div>
+
+  <!-- ===== TAB: บันทึกงาน ===== -->
+  <div id="tab-teacher" class="tab-content active">
+    <div class="stats-grid" id="top-stats">
+      <div class="stat-box"><div class="stat-label">นักเรียนทั้งหมด</div><div class="stat-value">40</div></div>
+      <div class="stat-box"><div class="stat-label">ส่งแล้ว (คน)</div><div class="stat-value" id="ts-submitted">0</div></div>
+      <div class="stat-box amber"><div class="stat-label">รวมหน้าทั้งหมด</div><div class="stat-value" id="ts-pages">0</div></div>
+      <div class="stat-box"><div class="stat-label">รวมรายการบันทึก</div><div class="stat-value" id="ts-records">0</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📝</span> บันทึกการส่งงาน</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>เลือกนักเรียน</label>
+          <select id="f-student"></select>
+        </div>
+        <div class="field">
+          <label>ครั้งที่ส่ง</label>
+          <input type="number" id="f-round" min="1" placeholder="ระบุครั้งที่ เช่น 1" />
+        </div>
+      </div>
+      <div class="form-grid three">
+        <div class="field">
+          <label>วันที่ส่ง</label>
+          <input type="date" id="f-date" />
+        </div>
+        <div class="field">
+          <label>จำนวนเรื่องที่เขียน</label>
+          <input type="number" id="f-stories" min="0" placeholder="เรื่อง" />
+        </div>
+        <div class="field">
+          <label>จำนวนหน้า (ครั้งนี้)</label>
+          <input type="number" id="f-pages" min="0" placeholder="หน้า" />
+        </div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:1fr; margin-bottom:1.25rem">
+        <div class="field">
+          <label>คอมเม้นต์เพิ่มเติม</label>
+          <textarea id="f-comment" placeholder="เช่น เขียนสะอาด อธิบายได้ชัดเจน ควรเพิ่มรายละเอียด..."></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveRecord()">💾 บันทึก</button>
+        <button class="btn-secondary" onclick="clearForm()">🔄 ล้างฟอร์ม</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🕐</span> รายการบันทึกล่าสุด</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>นักเรียน</th><th>ครั้งที่</th><th>วันที่</th><th style="text-align:center">เรื่อง</th><th style="text-align:center">หน้า</th><th>คอมเม้นต์</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="recent-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: นักเรียน ===== -->
+  <div id="tab-students" class="tab-content">
+    <div id="list-view">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="ค้นหาชื่อ ชื่อเล่น หรือเลขที่..." oninput="renderList()" />
+      </div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div class="table-wrap" style="border:none;">
+          <table>
+            <thead>
+              <tr><th>เลขที่</th><th>ชื่อเล่น / ชื่อนักเรียน</th><th style="text-align:center">ส่งแล้ว</th><th style="text-align:center">รวมหน้า</th><th>ส่งล่าสุด</th><th>สถานะ</th><th></th></tr>
+            </thead>
+            <tbody id="student-list-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="detail-view" style="display:none;">
+      <button class="back-btn" onclick="backToList()">← กลับรายชื่อ</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: ภาพรวม ===== -->
+  <div id="tab-summary" class="tab-content">
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-label">นักเรียนทั้งหมด</div><div class="stat-value">40</div></div>
+      <div class="stat-box"><div class="stat-label">ส่งแล้ว (คน)</div><div class="stat-value" id="ss-submitted">0</div></div>
+      <div class="stat-box amber"><div class="stat-label">รวมหน้าทั้งหมด</div><div class="stat-value" id="ss-pages">0</div></div>
+      <div class="stat-box"><div class="stat-label">เฉลี่ยหน้า/คน</div><div class="stat-value" id="ss-avg">0</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> ความคืบหน้าหน้ารายคน (เรียงจากมากไปน้อย)</div>
+      <div id="progress-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STUDENTS = [
+  {id:1,nick:"ภูมิ",name:"นายรัตนภูมิ อุดมผล"},
+  {id:2,nick:"อุ้ง",name:"นายพีรพงศ์ อุ่นเรือนงาม"},
+  {id:3,nick:"แต๊ก",name:"นายธนวันต์ พิมใจ"},
+  {id:4,nick:"ภูมิ",name:"นายกิติภูมิ มณีวงศ์"},
+  {id:5,nick:"คิว",name:"นายวัชรพงศ์ เมธาวิชิต"},
+  {id:6,nick:"ฟิล์ม",name:"นายนิติวัฒน์ กันทะวะ"},
+  {id:7,nick:"เฟาเฟา",name:"นายศาสตรพล ดงอุเทน"},
+  {id:8,nick:"ตองอู",name:"นายจิตติพัฒน์ จงบริบูรณ์"},
+  {id:9,nick:"เพชร",name:"นายพชร บุญริมสนอง"},
+  {id:10,nick:"โฟล์วิว",name:"นายณฐพล ดวงประวัติ"},
+  {id:11,nick:"เกี๋ยวซ่า",name:"นายนาวิน หังสนาวิน"},
+  {id:12,nick:"การ์ฟิลด์",name:"นายธนกฤต ธรรมเจริญ"},
+  {id:13,nick:"มะพร้าว",name:"นายธารฎาวัฒน์ คงเจริญถิ่น"},
+  {id:14,nick:"ทีม",name:"นายณัฐกฤต ภูสมบัติ"},
+  {id:15,nick:"หมีพู",name:"นายฐิติพงษ์ ไกรกลอง"},
+  {id:16,nick:"ฮับ",name:"นายปฏิญญา บัวทอง"},
+  {id:17,nick:"ติม",name:"นายตันติกร เจริญกิจรุ่งโรจน์"},
+  {id:18,nick:"บาส",name:"นายภัทดนัย สิทธิพุทธา"},
+  {id:19,nick:"แม็ก",name:"นายธนพล ฉายอรุณ"},
+  {id:20,nick:"โฟล์ค",name:"นายศุภากร มีเงิน"},
+  {id:21,nick:"แฟรงค์",name:"นายกวิน เย็นวารีย์"},
+  {id:22,nick:"บิต",name:"นายภานุภัทร เจ๊ะสะและ"},
+  {id:23,nick:"มิกซ์",name:"นายสุวิสุทธิ์ ทรัพย์สกุล"},
+  {id:24,nick:"แชมป์",name:"นายปฏิภาณ สมเกียรติสกุล"},
+  {id:25,nick:"บุ๊ค",name:"นายวรโชติ ดวนสันเทียะ"},
+  {id:26,nick:"โอชิ",name:"นายณัฐพงศ์ ทาศรีงาม"},
+  {id:27,nick:"ก้าว",name:"นายเตชิต จิตต์บำรุงชัย"},
+  {id:28,nick:"จีโน่",name:"นายณัฐวุฒิ สร้อยพูล"},
+  {id:29,nick:"มิ้น",name:"นางสาวกัญญารัตน์ จันทร์แดง"},
+  {id:30,nick:"ของขวัญ",name:"นางสาวทอปัด มีศิริ"},
+  {id:31,nick:"แพร",name:"นางสาวสุพิชญา เกิดทอง"},
+  {id:32,nick:"พิกเล็ต",name:"นางสาวฐิติมา ไกรกลอง"},
+  {id:33,nick:"ริต้า",name:"นางสาวนูรอานีต้า สานิ"},
+  {id:34,nick:"ออม",name:"นางสาวอรณิชา บุญเขียว"},
+  {id:35,nick:"พลอย",name:"นางสาวปุณยาภา สุขกรี"},
+  {id:36,nick:"ครีม",name:"นางสาวภูริชญา สร้อยทอง"},
+  {id:37,nick:"มุก",name:"นางสาวอริสรา สว่างใจ"},
+  {id:38,nick:"ออกัส",name:"นางสาวลภัสรดา นิรพาธ"},
+  {id:39,nick:"ปิงปอง",name:"นางสาววรกมล คงเจริญ"},
+  {id:40,nick:"มีมี่",name:"นางสาวสุพิชญา ทานา"}
+];
+
+let records = [];
+let nextId = 1;
+
+function init() {
+  const sel = document.getElementById('f-student');
+  STUDENTS.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.id;
+    o.textContent = `${s.id}. ${s.nick} — ${s.name}`;
+    sel.appendChild(o);
+  });
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  renderAll();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['teacher','students','summary'][i] === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  renderAll();
+}
+
+function saveRecord() {
+  const sid = parseInt(document.getElementById('f-student').value);
+  const round = parseInt(document.getElementById('f-round').value) || 0;
+  const date = document.getElementById('f-date').value;
+  const stories = parseInt(document.getElementById('f-stories').value) || 0;
+  const pages = parseInt(document.getElementById('f-pages').value) || 0;
+  const comment = document.getElementById('f-comment').value.trim();
+
+  if (!date || !round || pages < 1) {
+    showToast('กรุณากรอกข้อมูลให้ครบ (ครั้งที่และจำนวนหน้า)', 'error');
+    return;
+  }
+
+  const student = STUDENTS.find(s => s.id === sid);
+  records.unshift({ id: nextId++, sid, round, date, stories, pages, comment });
+  clearForm();
+  renderAll();
+  showToast(`✓ บันทึกงาน${student.nick} (${student.name}) แล้ว`, 'success');
+}
+
+function clearForm() {
+  ['f-round','f-stories','f-pages','f-comment'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+}
+
+function deleteRecord(id) {
+  if (!confirm('ต้องการลบรายการนี้?')) return;
+  records = records.filter(r => r.id !== id);
+  renderAll();
+  showToast('ลบรายการแล้ว');
+}
+
+function getStats(sid) {
+  const recs = records.filter(r => r.sid === sid).sort((a,b) => a.round - b.round);
+  const totalPages = recs.reduce((s,r) => s + r.pages, 0);
+  const totalStories = recs.reduce((s,r) => s + r.stories, 0);
+  const lastDate = recs.length ? recs[recs.length-1].date : null;
+  return { recs, totalPages, totalStories, lastDate, count: recs.length };
+}
+
+function renderAll() {
+  renderTopStats();
+  renderRecentTable();
+  renderList();
+  renderSummary();
+}
+
+function renderTopStats() {
+  const submitted = STUDENTS.filter(s => getStats(s.id).count > 0).length;
+  const totalPages = records.reduce((s,r) => s + r.pages, 0);
+  document.getElementById('ts-submitted').textContent = submitted;
+  document.getElementById('ts-pages').textContent = totalPages;
+  document.getElementById('ts-records').textContent = records.length;
+}
+
+function renderRecentTable() {
+  const tbody = document.getElementById('recent-body');
+  const show = records.slice(0, 30);
+  if (!show.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📋</div><p>ยังไม่มีรายการบันทึก</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = show.map(r => {
+    const s = STUDENTS.find(st => st.id === r.sid);
+    return `<tr>
+      <td><span class="nick">${s.nick}</span>${s.name}</td>
+      <td class="num-cell">${r.round}</td>
+      <td style="white-space:nowrap">${formatDate(r.date)}</td>
+      <td class="num-cell">${r.stories}</td>
+      <td class="num-cell" style="color:var(--green);font-weight:600">${r.pages}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);font-size:12px">${r.comment || '—'}</td>
+      <td><button class="del-btn" onclick="deleteRecord(${r.id})">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderList() {
+  const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  const tbody = document.getElementById('student-list-body');
+  const filtered = STUDENTS.filter(s =>
+    !q || s.name.toLowerCase().includes(q) || s.nick.toLowerCase().includes(q) || String(s.id) === q
+  );
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>ไม่พบนักเรียนที่ค้นหา</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(s => {
+    const st = getStats(s.id);
+    let badge;
+    if (st.count === 0) badge = '<span class="badge badge-gray">ยังไม่ส่ง</span>';
+    else if (st.count >= 5) badge = '<span class="badge badge-green">✓ ดีมาก</span>';
+    else if (st.count >= 3) badge = '<span class="badge badge-green">กำลังดี</span>';
+    else badge = '<span class="badge badge-amber">เริ่มต้น</span>';
+    return `<tr>
+      <td class="num-cell" style="color:var(--ink-muted)">${s.id}</td>
+      <td><span class="nick">${s.nick}</span> ${s.name}</td>
+      <td class="num-cell">${st.count}</td>
+      <td class="num-cell" style="color:var(--green);font-weight:600">${st.totalPages}</td>
+      <td style="white-space:nowrap;color:var(--ink-soft);font-size:13px">${st.lastDate ? formatDate(st.lastDate) : '—'}</td>
+      <td>${badge}</td>
+      <td><button class="btn-secondary" style="padding:5px 14px;font-size:12px" onclick="showDetail(${s.id})">ดู →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function showDetail(sid) {
+  const s = STUDENTS.find(st => st.id === sid);
+  const st = getStats(sid);
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+
+  let cumulPages = 0;
+  const rowsHtml = st.recs.length ? st.recs.map(r => {
+    cumulPages += r.pages;
+    return `<tr>
+      <td class="num-cell" style="font-weight:600">${r.round}</td>
+      <td style="white-space:nowrap">${formatDate(r.date)}</td>
+      <td class="num-cell">${r.stories}</td>
+      <td class="num-cell">${r.pages}</td>
+      <td class="num-cell" style="color:var(--green);font-weight:700">${cumulPages}</td>
+      <td style="font-size:13px;color:var(--ink-soft)">${r.comment || '—'}</td>
+    </tr>`;
+  }).join('') : '';
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.25rem">
+        <div class="avatar-circle">${s.nick.slice(0,1)}</div>
+        <div>
+          <div style="font-size:12px;color:var(--ink-muted);margin-bottom:2px">เลขที่ ${s.id}</div>
+          <div style="font-size:20px;font-weight:700"><span style="color:var(--green)">${s.nick}</span></div>
+          <div style="font-size:14px;color:var(--ink-soft)">${s.name}</div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">ส่งแล้ว</div><div class="stat-value">${st.count} ครั้ง</div></div>
+        <div class="stat-box amber"><div class="stat-label">รวมหน้า</div><div class="stat-value">${st.totalPages}</div></div>
+        <div class="stat-box"><div class="stat-label">รวมเรื่อง</div><div class="stat-value">${st.totalStories}</div></div>
+        <div class="stat-box soft"><div class="stat-label">ส่งล่าสุด</div><div class="stat-value" style="font-size:15px;padding-top:4px">${st.lastDate ? formatDate(st.lastDate) : '—'}</div></div>
+      </div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:1.1rem 1.5rem 0.75rem;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px">📋 ประวัติการส่งงาน</div>
+      ${st.count ? `
+      <div class="table-wrap" style="border:none;border-top:1px solid var(--border)">
+        <table>
+          <thead><tr><th>ครั้งที่</th><th>วันที่</th><th style="text-align:center">เรื่อง</th><th style="text-align:center">หน้า</th><th style="text-align:center">สะสม</th><th>คอมเม้นต์ครู</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>` : '<div class="empty-state"><div class="empty-icon">📭</div><p>ยังไม่มีประวัติการส่งงาน</p></div>'}
+    </div>`;
+}
+
+function backToList() {
+  document.getElementById('list-view').style.display = 'block';
+  document.getElementById('detail-view').style.display = 'none';
+}
+
+function renderSummary() {
+  const submitted = STUDENTS.filter(s => getStats(s.id).count > 0).length;
+  const totalPages = records.reduce((s,r) => s + r.pages, 0);
+  const avg = submitted ? Math.round(totalPages / submitted) : 0;
+  document.getElementById('ss-submitted').textContent = submitted;
+  document.getElementById('ss-pages').textContent = totalPages;
+  document.getElementById('ss-avg').textContent = avg;
+
+  const maxPages = Math.max(...STUDENTS.map(s => getStats(s.id).totalPages), 1);
+  const sorted = [...STUDENTS].map(s => ({...s, ...getStats(s.id)})).sort((a,b) => b.totalPages - a.totalPages);
+
+  document.getElementById('progress-list').innerHTML = sorted.map(s => `
+    <div class="prog-row">
+      <div class="prog-name">
+        <span style="color:var(--ink-muted);font-size:11px;margin-right:4px">${s.id}.</span>
+        <strong style="color:var(--green)">${s.nick}</strong>
+        <span class="prog-nick"> ${s.name.replace(/^นาย|^นางสาว/,'').trim().split(' ')[0]}</span>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${Math.round(s.totalPages/maxPages*100)}%"></div></div>
+      <div class="prog-pages">${s.totalPages} หน้า</div>
+    </div>`).join('');
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  const th = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${parseInt(day)} ${th[parseInt(m)]} ${parseInt(y)+543}`;
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+init();
+</script>
+</body>
+</html>
