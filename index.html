@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 6/4 รักการอ่าน ครูเฟิร์น</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --coral:#FF6B6B; --coral-light:#FFE5E5; --coral-dark:#E05555;
+  --mint:#4ECDC4;  --mint-light:#E0FAF8;  --mint-dark:#3AABA3;
+  --sun:#FFD93D;   --sun-light:#FFF8D6;   --sun-dark:#E6C235;
+  --lavender:#A78BFA; --lavender-light:#EDE9FE;
+  --sky:#60A5FA;   --sky-light:#DBEAFE;
+  --peach:#FFA07A; --peach-light:#FFE8DC;
+  --sage:#6BCB77;  --sage-light:#DCFCE7;
+  --ink:#1E1B2E;   --ink-soft:#4B4869;    --ink-muted:#9491B4;
+  --cream:#FFFDF7; --white:#FFFFFF;
+  --border:#E8E4F3;
+  --r:16px; --r-sm:10px; --r-lg:24px;
+  --shadow:0 4px 20px rgba(100,80,200,.1);
+  --shadow-lg:0 8px 40px rgba(100,80,200,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Sarabun',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+}
+
+/* ── confetti bg ── */
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,107,107,.06) 0%, transparent 50%),
+    radial-gradient(circle at 90% 10%, rgba(78,205,196,.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(255,217,61,.05) 0%, transparent 50%);
+}
+
+/* ═══ HEADER ═══ */
+header{
+  background:linear-gradient(135deg,#FF6B6B 0%,#FF8E53 35%,#FFD93D 70%,#4ECDC4 100%);
+  padding:0 2rem;
+  height:72px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:200;
+  box-shadow:0 4px 24px rgba(255,107,107,.3);
+}
+.logo-area{display:flex;align-items:center;gap:12px;}
+.logo-book{font-size:32px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
+.logo-text .title{font-family:'Mitr',sans-serif;font-size:20px;font-weight:600;color:white;text-shadow:0 1px 4px rgba(0,0,0,.2);}
+.logo-text .sub{font-size:12px;color:rgba(255,255,255,.85);margin-top:1px;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.hbtn{
+  background:rgba(255,255,255,.25); border:1.5px solid rgba(255,255,255,.5);
+  border-radius:99px; padding:6px 16px; color:white;
+  font-family:'Sarabun',sans-serif; font-size:13px; font-weight:500;
+  cursor:pointer; transition:.2s; white-space:nowrap; backdrop-filter:blur(8px);
+}
+.hbtn:hover{background:rgba(255,255,255,.4);}
+.sync-pill{
+  display:flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,.2); border-radius:99px;
+  padding:5px 12px; font-size:12px; color:white; backdrop-filter:blur(8px);
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:blink 2s infinite;}
+.dot.off{background:#fbbf24;animation:none;}
+.dot.err{background:#f87171;animation:none;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ═══ MAIN LAYOUT ═══ */
+.main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem 5rem;position:relative;z-index:1;}
+
+/* ═══ TAB NAV ═══ */
+.tab-nav{
+  display:flex; gap:8px; flex-wrap:wrap;
+  background:white; border-radius:var(--r-lg);
+  padding:8px; margin-bottom:1.75rem;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.tnav{
+  flex:1; min-width:100px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:10px 8px; border-radius:var(--r-sm);
+  border:none; background:transparent; cursor:pointer;
+  font-family:'Sarabun',sans-serif; font-size:13px; font-weight:500;
+  color:var(--ink-muted); transition:.2s;
+}
+.tnav .tico{font-size:22px;}
+.tnav:hover{background:var(--coral-light);color:var(--coral-dark);}
+.tnav.active{background:var(--coral);color:white;box-shadow:0 4px 12px rgba(255,107,107,.35);}
+.tnav.t-mint.active{background:var(--mint);box-shadow:0 4px 12px rgba(78,205,196,.35);}
+.tnav.t-sun.active{background:var(--sun);color:var(--ink);box-shadow:0 4px 12px rgba(255,217,61,.4);}
+.tnav.t-lav.active{background:var(--lavender);box-shadow:0 4px 12px rgba(167,139,250,.35);}
+.tnav.t-sky.active{background:var(--sky);box-shadow:0 4px 12px rgba(96,165,250,.35);}
+
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:popIn .25s ease;}
+@keyframes popIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ CARDS ═══ */
+.card{
+  background:white; border-radius:var(--r-lg);
+  border:1.5px solid var(--border);
+  padding:1.5rem; margin-bottom:1.25rem;
+  box-shadow:var(--shadow);
+}
+.card-title{
+  font-family:'Mitr',sans-serif; font-size:16px; font-weight:500;
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:1.25rem; padding-bottom:.875rem;
+  border-bottom:2px dashed #EDE9FE;
+}
+
+/* ═══ SEMESTER TOGGLE ═══ */
+.sem-toggle{display:flex;gap:8px;margin-bottom:1.25rem;}
+.sem-btn{
+  flex:1; padding:10px; border-radius:var(--r-sm);
+  border:2px solid var(--border); background:white;
+  font-family:'Mitr',sans-serif; font-size:14px; font-weight:500;
+  cursor:pointer; transition:.2s; color:var(--ink-soft);
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.sem-btn.active-s1{background:var(--coral);border-color:var(--coral);color:white;box-shadow:0 4px 12px rgba(255,107,107,.3);}
+.sem-btn.active-s2{background:var(--mint);border-color:var(--mint);color:white;box-shadow:0 4px 12px rgba(78,205,196,.3);}
+
+/* ═══ STATS ═══ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem;}
+.stat{
+  background:white; border-radius:var(--r); border:1.5px solid var(--border);
+  padding:1rem 1.1rem; box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.stat-emoji{font-size:28px;margin-bottom:4px;}
+.stat-val{font-family:'Mitr',sans-serif;font-size:26px;font-weight:600;color:var(--coral);line-height:1;}
+.stat.c-mint .stat-val{color:var(--mint-dark);}
+.stat.c-sun .stat-val{color:#b08800;}
+.stat.c-lav .stat-val{color:var(--lavender);}
+.stat-lbl{font-size:11px;font-weight:500;color:var(--ink-muted);margin-top:3px;}
+.stat::after{
+  content:attr(data-emoji);
+  position:absolute;right:-4px;bottom:-6px;
+  font-size:52px;opacity:.06;
+}
+
+/* ═══ FORM ═══ */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.fg.three{grid-template-columns:repeat(3,1fr);}
+.fg.one{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:12px;font-weight:600;color:var(--ink-soft);letter-spacing:.3px;}
+.field input,.field select,.field textarea{
+  font-family:'Sarabun',sans-serif; font-size:14px;
+  padding:10px 13px; border:2px solid var(--border);
+  border-radius:var(--r-sm); color:var(--ink); background:#FAFAFE;
+  outline:none; transition:.15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,107,.12); background:white;
+}
+.field textarea{resize:vertical;min-height:80px;}
+
+.btn-save{
+  background:linear-gradient(135deg,var(--coral),var(--peach));
+  color:white; border:none; border-radius:99px;
+  padding:11px 28px; font-family:'Mitr',sans-serif; font-size:15px; font-weight:500;
+  cursor:pointer; transition:.2s; display:inline-flex; align-items:center; gap:8px;
+  box-shadow:0 4px 14px rgba(255,107,107,.35);
+}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,107,.4);}
+.btn-save:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-ghost{
+  background:white; color:var(--ink-soft);
+  border:2px solid var(--border); border-radius:99px;
+  padding:11px 22px; font-family:'Sarabun',sans-serif; font-size:14px; font-weight:500;
+  cursor:pointer; transition:.2s;
+}
+.btn-ghost:hover{border-color:var(--coral);color:var(--coral);}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r-sm);border:1.5px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+thead{background:linear-gradient(90deg,#FF6B6B18,#4ECDC418);}
+thead th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--border);white-space:nowrap;}
+tbody tr{transition:.12s;}
+tbody tr:hover td{background:rgba(255,107,107,.04);}
+tbody td{padding:10px 14px;border-bottom:1px solid #F3F0FF;vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+.nc{text-align:center;font-weight:600;}
+
+/* ═══ BOOK STRUCTURE DISPLAY ═══ */
+.book-section{margin-bottom:1.5rem;}
+.book-sec-title{
+  font-family:'Mitr',sans-serif; font-size:13px; font-weight:600;
+  display:flex; align-items:center; gap:8px; margin-bottom:.75rem;
+  color:var(--ink-soft); letter-spacing:.3px; text-transform:uppercase;
+}
+.pages-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.page-chip{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:70px;height:70px;border-radius:var(--r-sm);
+  border:2px solid var(--border);background:white;
+  font-size:11px;font-weight:500;color:var(--ink-soft);
+  cursor:pointer;transition:.2s;text-align:center;line-height:1.3;
+  position:relative;
+}
+.page-chip:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.page-chip.done{border-color:var(--sage);background:var(--sage-light);}
+.page-chip.done .chip-ico{color:var(--sage);}
+.page-chip .chip-ico{font-size:20px;margin-bottom:3px;}
+.page-chip .chip-lbl{font-size:9.5px;padding:0 4px;}
+.page-chip .chip-cnt{
+  position:absolute;top:-6px;right:-6px;
+  background:var(--coral);color:white;
+  border-radius:99px;min-width:18px;height:18px;
+  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  padding:0 4px; border:2px solid white;
+}
+
+/* ═══ STUDENT CARDS VIEW ═══ */
+.student-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.stu-card{
+  background:white;border-radius:var(--r);border:1.5px solid var(--border);
+  padding:1rem;cursor:pointer;transition:.2s;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.stu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--coral);}
+.stu-card:nth-child(4n+2)::before{background:var(--mint);}
+.stu-card:nth-child(4n+3)::before{background:var(--sun);}
+.stu-card:nth-child(4n)::before{background:var(--lavender);}
+.stu-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.stu-avatar{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Mitr',sans-serif;font-size:16px;font-weight:600;
+  margin-bottom:8px;
+}
+.stu-nick{font-family:'Mitr',sans-serif;font-size:15px;font-weight:600;color:var(--ink);}
+.stu-name{font-size:11px;color:var(--ink-muted);margin-bottom:8px;line-height:1.4;}
+.stu-stats{display:flex;gap:8px;flex-wrap:wrap;}
+.stu-badge{
+  font-size:11px;font-weight:600;padding:2px 8px;
+  border-radius:99px;
+}
+
+/* ═══ SEMESTER BOOK VIEW ═══ */
+.sem-book{
+  background:white;border-radius:var(--r-lg);border:1.5px solid var(--border);
+  padding:1.5rem;box-shadow:var(--shadow);margin-bottom:1.25rem;
+}
+.sem-book-title{
+  font-family:'Mitr',sans-serif;font-size:15px;font-weight:600;
+  display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;
+  padding-bottom:.75rem;border-bottom:2px dashed var(--border);
+}
+
+/* ═══ PROGRESS ═══ */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.prog-name{width:130px;font-size:12.5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prog-nick{font-family:'Mitr',sans-serif;font-size:13px;font-weight:600;color:var(--ink);}
+.prog-track{flex:1;background:#F3F0FF;border-radius:99px;height:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width .5s ease;}
+.prog-val{font-size:12px;font-weight:600;min-width:44px;text-align:right;color:var(--ink-soft);}
+
+/* ═══ CHART ═══ */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.25rem;}
+.chart-box{background:white;border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;box-shadow:var(--shadow);}
+.chart-title{font-family:'Mitr',sans-serif;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:1rem;}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;}
+.bg-green{background:#DCFCE7;color:#15803D;}
+.bg-amber{background:#FEF3C7;color:#92400E;}
+.bg-gray{background:#F1F5F9;color:#64748B;}
+.bg-coral{background:var(--coral-light);color:var(--coral-dark);}
+.bg-mint{background:var(--mint-light);color:var(--mint-dark);}
+
+.nick-tag{display:inline-block;background:linear-gradient(135deg,var(--coral-light),#FFE0DC);color:var(--coral-dark);border-radius:6px;padding:1px 8px;font-size:12px;font-weight:600;margin-right:5px;}
+
+/* ═══ DEL BTN ═══ */
+.del-btn{background:none;border:1.5px solid #FECACA;border-radius:8px;padding:4px 9px;cursor:pointer;color:var(--coral);font-size:13px;transition:.15s;}
+.del-btn:hover{background:var(--coral-light);}
+
+/* ═══ SEARCH ═══ */
+.search-wrap{position:relative;margin-bottom:1rem;}
+.search-wrap input{font-family:'Sarabun',sans-serif;font-size:14px;padding:11px 14px 11px 44px;border:2px solid var(--border);border-radius:99px;width:100%;background:white;color:var(--ink);outline:none;transition:.15s;}
+.search-wrap input:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,107,107,.12);}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--ink-muted);}
+
+/* ═══ BACK BTN ═══ */
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;font-family:'Mitr',sans-serif;font-size:14px;color:var(--coral);cursor:pointer;font-weight:500;margin-bottom:1.25rem;padding:6px 0;}
+.back-btn:hover{opacity:.75;}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:white;padding:12px 24px;border-radius:99px;font-size:14px;font-weight:500;opacity:0;transition:.3s;pointer-events:none;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.25);white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:linear-gradient(135deg,var(--mint-dark),var(--sage));}
+.toast.err{background:linear-gradient(135deg,#EF4444,#DC2626);}
+
+/* ═══ SETUP BANNER ═══ */
+.setup-banner{
+  background:linear-gradient(135deg,#FFF5F5,#F0FDF9);
+  border:2px dashed var(--mint-soft,#A7F3D0);
+  border-radius:var(--r-lg);padding:1.5rem;margin-bottom:1.25rem;
+}
+.setup-title{font-family:'Mitr',sans-serif;font-size:16px;font-weight:600;color:var(--mint-dark);margin-bottom:.875rem;display:flex;align-items:center;gap:8px;}
+.setup-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:.625rem;font-size:13px;color:var(--ink-soft);line-height:1.65;}
+.step-num{background:var(--mint);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.code-block{background:white;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 16px;font-family:monospace;font-size:11.5px;color:var(--ink);margin:.5rem 0;word-break:break-all;line-height:1.75;max-height:220px;overflow-y:auto;}
+.copy-btn{background:var(--mint-light);border:1.5px solid #99E6E1;border-radius:8px;padding:5px 12px;font-size:12px;color:var(--mint-dark);cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600;}
+.copy-btn:hover{background:var(--mint-soft,#A7F3D0);}
+.empty-box{text-align:center;padding:3rem 1rem;color:var(--ink-muted);}
+.empty-box .ei{font-size:44px;margin-bottom:10px;}
+.spinner{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .chart-row{grid-template-columns:1fr}
+  .fg,.fg.three{grid-template-columns:1fr}
+  header{padding:0 1rem}
+  .main{padding:1rem 1rem 5rem}
+  .hbtn.hm{display:none}
+  .student-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <span class="logo-book">📖</span>
+    <div class="logo-text">
+      <div class="title">6/4 รักการอ่าน 2568</div>
+      <div class="sub">ครูเฟิร์น • ระบบบันทึกการส่งงาน</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="sync-pill">
+      <span class="dot off" id="sync-dot"></span>
+      <span id="sync-text">ยังไม่ตั้งค่า</span>
+    </div>
+    <button class="hbtn hm" onclick="exportCSV()">⬇ CSV</button>
+    <button class="hbtn" onclick="switchTab('setup')">⚙️ ตั้งค่า</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- TAB NAV -->
+  <nav class="tab-nav">
+    <button class="tnav active" onclick="switchTab('record')"><span class="tico">✏️</span>บันทึกงาน</button>
+    <button class="tnav t-mint" onclick="switchTab('students')"><span class="tico">👥</span>นักเรียน</button>
+    <button class="tnav t-sun" onclick="switchTab('book')"><span class="tico">📚</span>เล่มรักการอ่าน</button>
+    <button class="tnav t-lav" onclick="switchTab('summary')"><span class="tico">📊</span>ภาพรวม</button>
+    <button class="tnav t-sky" onclick="switchTab('setup')"><span class="tico">⚙️</span>ตั้งค่า</button>
+  </nav>
+
+  <!-- ══════════ TAB: บันทึกงาน ══════════ -->
+  <div id="tab-record" class="tab-content active">
+    <div class="stats-row">
+      <div class="stat" data-emoji="👥"><div class="stat-emoji">👥</div><div class="stat-val">40</div><div class="stat-lbl">นักเรียนทั้งหมด</div></div>
+      <div class="stat c-mint" data-emoji="✅"><div class="stat-emoji">✅</div><div class="stat-val" id="ts-sub">0</div><div class="stat-lbl">ส่งแล้ว (คน)</div></div>
+      <div class="stat c-sun" data-emoji="📄"><div class="stat-emoji">📄</div><div class="stat-val" id="ts-pages">0</div><div class="stat-lbl">รวมหน้าทั้งหมด</div></div>
+      <div class="stat c-lav" data-emoji="📝"><div class="stat-emoji">📝</div><div class="stat-val" id="ts-recs">0</div><div class="stat-lbl">รายการบันทึก</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✏️ บันทึกการส่งรักการอ่าน</div>
+
+      <!-- Semester toggle -->
+      <div class="sem-toggle">
+        <button class="sem-btn active-s1" id="f-sem1-btn" onclick="selectSem(1)">📘 ภาคเรียนที่ 1</button>
+        <button class="sem-btn" id="f-sem2-btn" onclick="selectSem(2)">📗 ภาคเรียนที่ 2</button>
+      </div>
+      <input type="hidden" id="f-sem" value="1"/>
+
+      <div class="fg">
+        <div class="field"><label>เลือกนักเรียน</label><select id="f-student"></select></div>
+        <div class="field"><label>ครั้งที่ส่ง</label><input type="number" id="f-round" min="1" placeholder="เช่น 3"/></div>
+      </div>
+      <div class="fg three">
+        <div class="field"><label>วันที่ส่ง</label><input type="date" id="f-date"/></div>
+        <div class="field"><label>จำนวนเรื่อง (ครั้งนี้)</label><input type="number" id="f-stories" min="0" placeholder="เรื่อง"/></div>
+        <div class="field"><label>รวมจำนวนเรื่องที่ส่งแล้ว</label><input type="number" id="f-total" min="0" placeholder="รวมสะสม"/></div>
+      </div>
+
+      <!-- หน้าเล่ม -->
+      <div id="f-pages-area"></div>
+
+      <div class="fg one" style="margin-top:14px;margin-bottom:1.25rem">
+        <div class="field"><label>คอมเม้นต์ครูเฟิร์น 💬</label><textarea id="f-comment" placeholder="เช่น บันทึกครบถ้วน ลายมืออ่านง่าย สรุปได้ดีมาก..."></textarea></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-save" id="save-btn" onclick="saveRecord()">💾 บันทึก</button>
+        <button class="btn-ghost" onclick="clearForm()">🔄 ล้างฟอร์ม</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🕐 รายการล่าสุด</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>นักเรียน</th><th>เทอม</th><th>ครั้งที่</th><th>วันที่</th><th class="nc">เรื่อง</th><th class="nc">รวมสะสม</th><th>คอมเม้นต์</th><th></th></tr></thead>
+          <tbody id="recent-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TAB: นักเรียน ══════════ -->
+  <div id="tab-students" class="tab-content">
+    <div id="stu-list-view">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-inp" placeholder="ค้นหาชื่อ ชื่อเล่น หรือเลขที่..." oninput="renderStudentGrid()"/>
+      </div>
+      <div class="student-grid" id="student-grid"></div>
+    </div>
+    <div id="stu-detail-view" style="display:none;">
+      <button class="back-btn" onclick="backToGrid()">← กลับรายชื่อ</button>
+      <div id="stu-detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ TAB: เล่มรักการอ่าน ══════════ -->
+  <div id="tab-book" class="tab-content">
+    <div class="sem-toggle">
+      <button class="sem-btn active-s1" id="book-s1-btn" onclick="bookSem(1)">📘 ภาคเรียนที่ 1</button>
+      <button class="sem-btn" id="book-s2-btn" onclick="bookSem(2)">📗 ภาคเรียนที่ 2</button>
+    </div>
+    <div id="book-content"></div>
+  </div>
+
+  <!-- ══════════ TAB: ภาพรวม ══════════ -->
+  <div id="tab-summary" class="tab-content">
+    <div class="stats-row">
+      <div class="stat" data-emoji="👥"><div class="stat-emoji">👥</div><div class="stat-val">40</div><div class="stat-lbl">นักเรียนทั้งหมด</div></div>
+      <div class="stat c-mint" data-emoji="✅"><div class="stat-emoji">✅</div><div class="stat-val" id="ss-sub">0</div><div class="stat-lbl" id="ss-pct">ส่งแล้ว</div></div>
+      <div class="stat c-sun" data-emoji="📄"><div class="stat-emoji">📄</div><div class="stat-val" id="ss-pages">0</div><div class="stat-lbl">รวมหน้าทั้งหมด</div></div>
+      <div class="stat c-lav" data-emoji="⭐"><div class="stat-emoji">⭐</div><div class="stat-val" id="ss-avg">0</div><div class="stat-lbl">เฉลี่ยเรื่อง/คน</div></div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box">
+        <div class="chart-title">🎯 สถานะการส่ง</div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <svg viewBox="0 0 120 120" width="110" height="110" id="donut-svg"></svg>
+          <div id="donut-leg" style="flex:1;display:flex;flex-direction:column;gap:8px;font-size:13px;"></div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">🏆 Top 10 นักเรียน</div>
+        <div id="top10-list"></div>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box">
+        <div class="chart-title">📘 ภาคเรียนที่ 1 — การส่งรายครั้ง</div>
+        <div id="s1-bars"></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">📗 ภาคเรียนที่ 2 — การส่งรายครั้ง</div>
+        <div id="s2-bars"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between">
+        <span>📈 ความคืบหน้าทุกคน (รวมสะสม)</span>
+        <span style="font-size:12px;color:var(--ink-muted);font-weight:400">เรียงจากมากไปน้อย</span>
+      </div>
+      <div id="prog-all"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ TAB: ตั้งค่า ══════════ -->
+  <div id="tab-setup" class="tab-content">
+    <div class="setup-banner">
+      <div class="setup-title">☁️ เชื่อมต่อ Google Sheets — ข้อมูลอยู่ทุกเครื่อง</div>
+      <div class="setup-step"><span class="step-num">1</span><span>เปิด <a href="https://sheets.new" target="_blank" style="color:var(--mint-dark);font-weight:600">sheets.new</a> สร้าง Spreadsheet ใหม่ ตั้งชื่อ "รักการอ่าน 2568"</span></div>
+      <div class="setup-step"><span class="step-num">2</span><span>คลิก <b>Extensions → Apps Script</b> วางโค้ดด้านล่างทั้งหมด แล้วกด Save 💾</span></div>
+      <div class="code-block" id="script-code">const SHEET_NAME = 'reading69';
+function doPost(e){
+  try{
+    const d=JSON.parse(e.postData.contents);
+    const ss=SpreadsheetApp.getActiveSpreadsheet();
+    let sh=ss.getSheetByName(SHEET_NAME);
+    if(!sh){sh=ss.insertSheet(SHEET_NAME);sh.appendRow(['id','sid','sem','round','date','stories','total_stories','comment','ts']);}
+    if(d.action==='add'){sh.appendRow([d.id,d.sid,d.sem,d.round,d.date,d.stories,d.total_stories,d.comment,new Date().toISOString()]);}
+    else if(d.action==='delete'){const v=sh.getDataRange().getValues();for(let i=v.length-1;i>=1;i--){if(v[i][0]==d.id){sh.deleteRow(i+1);break;}}}
+    return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
+  }catch(err){return ContentService.createTextOutput(JSON.stringify({ok:false,error:err.message})).setMimeType(ContentService.MimeType.JSON);}
+}
+function doGet(){
+  try{
+    const ss=SpreadsheetApp.getActiveSpreadsheet();
+    const sh=ss.getSheetByName(SHEET_NAME);
+    if(!sh)return ContentService.createTextOutput(JSON.stringify({ok:true,records:[]})).setMimeType(ContentService.MimeType.JSON);
+    const v=sh.getDataRange().getValues();
+    const h=v[0];
+    const records=v.slice(1).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]);return o;});
+    return ContentService.createTextOutput(JSON.stringify({ok:true,records})).setMimeType(ContentService.MimeType.JSON);
+  }catch(err){return ContentService.createTextOutput(JSON.stringify({ok:false,error:err.message})).setMimeType(ContentService.MimeType.JSON);}
+}</div>
+      <button class="copy-btn" onclick="copyScript()">📋 คัดลอกโค้ด</button>
+      <div class="setup-step" style="margin-top:1rem"><span class="step-num">3</span><span>กด <b>Deploy → New deployment</b> → Type: Web app → Execute as: Me → Who has access: Anyone → Deploy</span></div>
+      <div class="setup-step"><span class="step-num">4</span><span>คัดลอก Web app URL มาวางด้านล่าง แล้วกด "บันทึกและเชื่อมต่อ"</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔗 Web App URL</div>
+      <div class="field" style="margin-bottom:1rem">
+        <label>Google Apps Script URL</label>
+        <input type="text" id="gas-url" placeholder="https://script.google.com/macros/s/..." style="font-size:13px;"/>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-save" style="background:linear-gradient(135deg,var(--mint),var(--mint-dark))" onclick="saveGasUrl()">💾 บันทึกและเชื่อมต่อ</button>
+        <button class="btn-ghost" onclick="testConn()">🔄 ทดสอบ</button>
+      </div>
+      <div id="conn-result" style="margin-top:1rem;font-size:13px;color:var(--ink-soft)"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💾 สำรองข้อมูล</div>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:1rem">Export ข้อมูลทั้งหมดเป็น CSV เปิดใน Excel ได้เลย</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="btn-ghost" style="color:var(--coral);border-color:#FECACA" onclick="confirmClear()">🗑 ล้างข้อมูลทั้งหมด</button>
+      </div>
+    </div>
+  </div>
+</div><!-- .main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════ DATA ══════════
+const LS_REC='rtr2_records', LS_ID='rtr2_nextid', LS_URL='rtr2_url';
+
+const STUDENTS=[
+  {id:1,nick:"ภูมิ",name:"นายรัตนภูมิ อุดมผล"},
+  {id:2,nick:"อุ้ง",name:"นายพีรพงศ์ อุ่นเรือนงาม"},
+  {id:3,nick:"แต๊ก",name:"นายธนวันต์ พิมใจ"},
+  {id:4,nick:"ภูมิ",name:"นายกิติภูมิ มณีวงศ์"},
+  {id:5,nick:"คิว",name:"นายวัชรพงศ์ เมธาวิชิต"},
+  {id:6,nick:"ฟิล์ม",name:"นายนิติวัฒน์ กันทะวะ"},
+  {id:7,nick:"เฟาเฟา",name:"นายศาสตรพล ดงอุเทน"},
+  {id:8,nick:"ตองอู",name:"นายจิตติพัฒน์ จงบริบูรณ์"},
+  {id:9,nick:"เพชร",name:"นายพชร บุญริมสนอง"},
+  {id:10,nick:"โฟล์วิว",name:"นายณฐพล ดวงประวัติ"},
+  {id:11,nick:"เกี๋ยวซ่า",name:"นายนาวิน หังสนาวิน"},
+  {id:12,nick:"การ์ฟิลด์",name:"นายธนกฤต ธรรมเจริญ"},
+  {id:13,nick:"มะพร้าว",name:"นายธารฎาวัฒน์ คงเจริญถิ่น"},
+  {id:14,nick:"ทีม",name:"นายณัฐกฤต ภูสมบัติ"},
+  {id:15,nick:"หมีพู",name:"นายฐิติพงษ์ ไกรกลอง"},
+  {id:16,nick:"ฮับ",name:"นายปฏิญญา บัวทอง"},
+  {id:17,nick:"ติม",name:"นายตันติกร เจริญกิจรุ่งโรจน์"},
+  {id:18,nick:"บาส",name:"นายภัทดนัย สิทธิพุทธา"},
+  {id:19,nick:"แม็ก",name:"นายธนพล ฉายอรุณ"},
+  {id:20,nick:"โฟล์ค",name:"นายศุภากร มีเงิน"},
+  {id:21,nick:"แฟรงค์",name:"นายกวิน เย็นวารีย์"},
+  {id:22,nick:"บิต",name:"นายภานุภัทร เจ๊ะสะและ"},
+  {id:23,nick:"มิกซ์",name:"นายสุวิสุทธิ์ ทรัพย์สกุล"},
+  {id:24,nick:"แชมป์",name:"นายปฏิภาณ สมเกียรติสกุล"},
+  {id:25,nick:"บุ๊ค",name:"นายวรโชติ ดวนสันเทียะ"},
+  {id:26,nick:"โอชิ",name:"นายณัฐพงศ์ ทาศรีงาม"},
+  {id:27,nick:"ก้าว",name:"นายเตชิต จิตต์บำรุงชัย"},
+  {id:28,nick:"จีโน่",name:"นายณัฐวุฒิ สร้อยพูล"},
+  {id:29,nick:"มิ้น",name:"นางสาวกัญญารัตน์ จันทร์แดง"},
+  {id:30,nick:"ของขวัญ",name:"นางสาวทอปัด มีศิริ"},
+  {id:31,nick:"แพร",name:"นางสาวสุพิชญา เกิดทอง"},
+  {id:32,nick:"พิกเล็ต",name:"นางสาวฐิติมา ไกรกลอง"},
+  {id:33,nick:"ริต้า",name:"นางสาวนูรอานีต้า สานิ"},
+  {id:34,nick:"ออม",name:"นางสาวอรณิชา บุญเขียว"},
+  {id:35,nick:"พลอย",name:"นางสาวปุณยาภา สุขกรี"},
+  {id:36,nick:"ครีม",name:"นางสาวภูริชญา สร้อยทอง"},
+  {id:37,nick:"มุก",name:"นางสาวอริสรา สว่างใจ"},
+  {id:38,nick:"ออกัส",name:"นางสาวลภัสรดา นิรพาธ"},
+  {id:39,nick:"ปิงปอง",name:"นางสาววรกมล คงเจริญ"},
+  {id:40,nick:"มีมี่",name:"นางสาวสุพิชญา ทานา"}
+];
+
+// โครงสร้างเล่มรักการอ่าน
+const BOOK = {
+  s1: [
+    {key:'cover', label:'หน้าปก', ico:'📖', type:'special'},
+    {key:'me',    label:'ฉันเป็นใคร', ico:'🙋', type:'special'},
+    ...Array.from({length:29},(_,i)=>({key:`s1_${i+1}`, label:`เรื่องที่ ${i+1}`, ico:'📝', type:'story', num:i+1}))
+  ],
+  s2: [
+    ...Array.from({length:21},(_,i)=>({key:`s2_${i+1}`, label:`เรื่องที่ ${i+1}`, ico:'📝', type:'story', num:i+1})),
+    {key:'vocab',    label:'จดศัพท์คั่นเวลา',    ico:'📒', type:'special'},
+    {key:'country',  label:'ประเทศของเรา',        ico:'🌍', type:'special'},
+    {key:'geo',      label:'เรขาคณิต',             ico:'📐', type:'special'},
+    {key:'desert',   label:'หลงทางกลางทะเลทราย',  ico:'🏜️', type:'special'},
+    {key:'sudoku',   label:'Sudoku',               ico:'🔢', type:'special'},
+    {key:'animals',  label:'Animals',              ico:'🐾', type:'special'},
+    {key:'budget',   label:'รายรับรายจ่าย',        ico:'💰', type:'special'},
+    {key:'mindmap',  label:'ผังมโนทัศน์',          ico:'🗺️', type:'special'},
+    {key:'eval',     label:'แบบประเมิน',           ico:'📋', type:'special'},
+  ]
+};
+
+const AVATAR_COLORS=[
+  ['#FF6B6B','#FFE5E5'],['#4ECDC4','#E0FAF8'],['#FFD93D','#FFF8D6'],
+  ['#A78BFA','#EDE9FE'],['#60A5FA','#DBEAFE'],['#FFA07A','#FFE8DC'],
+  ['#6BCB77','#DCFCE7'],['#F472B6','#FCE7F3'],
+];
+function avatarColor(id){ return AVATAR_COLORS[(id-1)%AVATAR_COLORS.length]; }
+
+// ══════════ STATE ══════════
+let records=[], nextId=1, gasUrl='';
+
+function loadLocal(){
+  try{records=JSON.parse(localStorage.getItem(LS_REC)||'[]');}catch{records=[];}
+  try{nextId=parseInt(localStorage.getItem(LS_ID)||'1');}catch{nextId=1;}
+  gasUrl=localStorage.getItem(LS_URL)||'';
+}
+function saveLocal(){
+  localStorage.setItem(LS_REC,JSON.stringify(records));
+  localStorage.setItem(LS_ID,String(nextId));
+}
+
+// ══════════ CLOUD ══════════
+async function gasGet(){
+  if(!gasUrl)return null;
+  try{const r=await fetch(gasUrl,{method:'GET',mode:'cors'});const j=await r.json();return j.ok?j.records:null;}catch{return null;}
+}
+async function gasPost(payload){
+  if(!gasUrl)return false;
+  try{
+    const r=await fetch(gasUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    const j=await r.json();return j.ok;
+  }catch{return false;}
+}
+async function syncCloud(){
+  if(!gasUrl)return;
+  setSyncStatus('syncing');
+  const remote=await gasGet();
+  if(!remote){setSyncStatus('err');return;}
+  records=remote.map(r=>({
+    id:+r.id,sid:+r.sid,sem:+r.sem||1,round:+r.round,
+    date:String(r.date),stories:+r.stories||0,
+    total_stories:+r.total_stories||0,comment:r.comment||''
+  })).sort((a,b)=>b.id-a.id);
+  nextId=records.length?Math.max(...records.map(r=>r.id))+1:1;
+  saveLocal(); setSyncStatus('ok'); renderAll();
+}
+function setSyncStatus(s){
+  const dot=document.getElementById('sync-dot'),txt=document.getElementById('sync-text');
+  dot.className='dot';
+  if(s==='ok'){txt.textContent='ซิงค์แล้ว ✓';}
+  else if(s==='syncing'){dot.style.background='#60a5fa';txt.textContent='กำลังซิงค์...';}
+  else if(s==='err'){dot.classList.add('err');txt.textContent='เชื่อมต่อไม่ได้';}
+  else{dot.classList.add('off');txt.textContent='ยังไม่ตั้งค่า';}
+}
+
+// ══════════ INIT ══════════
+function init(){
+  loadLocal();
+  const sel=document.getElementById('f-student');
+  STUDENTS.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.id; o.textContent=`${s.id}. ${s.nick} — ${s.name}`;
+    sel.appendChild(o);
+  });
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  if(gasUrl){document.getElementById('gas-url').value=gasUrl;syncCloud();}
+  renderPagesArea(1);
+  renderAll();
+}
+
+// ══════════ TABS ══════════
+function switchTab(tab){
+  const tabs=['record','students','book','summary','setup'];
+  tabs.forEach((t,i)=>{
+    document.querySelectorAll('.tnav')[i]?.classList.toggle('active',t===tab);
+    document.getElementById('tab-'+t)?.classList.toggle('active',t===tab);
+  });
+  if(tab==='summary')renderSummary();
+  if(tab==='book')renderBook(1);
+}
+
+// ══════════ FORM ══════════
+let currentSem=1;
+function selectSem(s){
+  currentSem=s;
+  document.getElementById('f-sem').value=s;
+  document.getElementById('f-sem1-btn').className='sem-btn'+(s===1?' active-s1':'');
+  document.getElementById('f-sem2-btn').className='sem-btn'+(s===2?' active-s2':'');
+  renderPagesArea(s);
+}
+function renderPagesArea(sem){
+  const pages=BOOK[`s${sem}`];
+  const area=document.getElementById('f-pages-area');
+  area.innerHTML=`
+    <div style="margin-bottom:6px">
+      <label style="font-size:12px;font-weight:600;color:var(--ink-soft);">หน้าในเล่มที่ส่ง (เลือกได้หลายหน้า)</label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:#FAFAFE;border:2px solid var(--border);border-radius:var(--r-sm);">
+      ${pages.map(p=>`
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;padding:4px 10px;background:white;border:1.5px solid var(--border);border-radius:99px;transition:.15s;user-select:none;" class="page-label">
+          <input type="checkbox" value="${p.key}" name="book-page" style="accent-color:var(--coral);width:14px;height:14px;" onchange="this.parentElement.style.background=this.checked?'#FFE5E5':'white';this.parentElement.style.borderColor=this.checked?'var(--coral)':'var(--border)';">
+          ${p.ico} ${p.label}
+        </label>`).join('')}
+    </div>`;
+}
+
+async function saveRecord(){
+  const sid=+document.getElementById('f-student').value;
+  const sem=+document.getElementById('f-sem').value;
+  const round=+document.getElementById('f-round').value||0;
+  const date=document.getElementById('f-date').value;
+  const stories=+document.getElementById('f-stories').value||0;
+  const total_stories=+document.getElementById('f-total').value||0;
+  const comment=document.getElementById('f-comment').value.trim();
+  const checkedPages=[...document.querySelectorAll('input[name="book-page"]:checked')].map(c=>c.value);
+
+  if(!date||!round){showToast('กรุณากรอกวันที่และครั้งที่ส่ง','err');return;}
+
+  const rec={id:nextId++,sid,sem,round,date,stories,total_stories,comment,pages:checkedPages};
+  records.unshift(rec);
+  saveLocal();
+  clearForm();
+  renderAll();
+  const s=STUDENTS.find(st=>st.id===sid);
+  showToast(`✓ บันทึกงาน${s.nick} เทอม${sem} ครั้งที่${round}แล้ว`,'ok');
+
+  if(gasUrl){
+    const btn=document.getElementById('save-btn');
+    btn.innerHTML='<span class="spinner"></span>บันทึกขึ้น Cloud...'; btn.disabled=true;
+    const ok=await gasPost({action:'add',...rec,pages:checkedPages.join(',')});
+    btn.innerHTML='💾 บันทึก'; btn.disabled=false;
+    if(ok){setSyncStatus('ok');}else{showToast('⚠️ Cloud บันทึกไม่สำเร็จ (เก็บในเครื่องแล้ว)','err');}
+  }
+}
+function clearForm(){
+  ['f-round','f-stories','f-total','f-comment'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  document.querySelectorAll('input[name="book-page"]').forEach(c=>{
+    c.checked=false;
+    c.parentElement.style.background='white';
+    c.parentElement.style.borderColor='var(--border)';
+  });
+}
+async function deleteRecord(id){
+  if(!confirm('ลบรายการนี้?'))return;
+  records=records.filter(r=>r.id!==id);
+  saveLocal();renderAll();
+  if(gasUrl)await gasPost({action:'delete',id});
+  showToast('ลบรายการแล้ว');
+}
+
+// ══════════ HELPERS ══════════
+function getStats(sid){
+  const recs=records.filter(r=>r.sid===sid);
+  const s1=recs.filter(r=>r.sem===1); const s2=recs.filter(r=>r.sem===2);
+  const totalStories=recs.reduce((s,r)=>s+(r.total_stories||r.stories||0),0);
+  const lastDate=recs.length?recs.sort((a,b)=>b.id-a.id)[0].date:null;
+  return{recs,s1,s2,totalStories,lastDate,count:recs.length};
+}
+function fmtDate(d){
+  if(!d)return'—';
+  const[y,m,day]=String(d).slice(0,10).split('-');
+  const th=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return`${parseInt(day)} ${th[+m]} ${+y+543}`;
+}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════════ RENDER ══════════
+function renderAll(){renderTopStats();renderRecentTable();renderStudentGrid();renderBook(1);}
+
+function renderTopStats(){
+  const sub=STUDENTS.filter(s=>getStats(s.id).count>0).length;
+  const pg=records.reduce((s,r)=>s+(r.total_stories||0),0);
+  document.getElementById('ts-sub').textContent=sub;
+  document.getElementById('ts-pages').textContent=records.reduce((s,r)=>s+(r.stories||0),0);
+  document.getElementById('ts-recs').textContent=records.length;
+}
+
+function renderRecentTable(){
+  const tbody=document.getElementById('recent-body');
+  if(!records.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-box"><div class="ei">📋</div><p>ยังไม่มีรายการ</p></div></td></tr>`;return;}
+  tbody.innerHTML=records.slice(0,50).map(r=>{
+    const s=STUDENTS.find(st=>st.id===r.sid);
+    return`<tr>
+      <td><span class="nick-tag">${s.nick}</span>${s.name}</td>
+      <td><span class="badge ${r.sem===1?'bg-coral':'bg-mint'}">${r.sem===1?'📘 เทอม 1':'📗 เทอม 2'}</span></td>
+      <td class="nc">${r.round}</td>
+      <td style="white-space:nowrap">${fmtDate(r.date)}</td>
+      <td class="nc">${r.stories}</td>
+      <td class="nc" style="color:#059669;font-weight:700">${r.total_stories||'—'}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--ink-muted)">${r.comment||'—'}</td>
+      <td><button class="del-btn" onclick="deleteRecord(${r.id})">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderStudentGrid(){
+  const q=(document.getElementById('search-inp').value||'').trim().toLowerCase();
+  const filtered=STUDENTS.filter(s=>!q||s.name.toLowerCase().includes(q)||s.nick.toLowerCase().includes(q)||String(s.id)===q);
+  const grid=document.getElementById('student-grid');
+  if(!filtered.length){grid.innerHTML=`<div class="empty-box" style="grid-column:1/-1"><div class="ei">🔍</div><p>ไม่พบนักเรียน</p></div>`;return;}
+  grid.innerHTML=filtered.map(s=>{
+    const st=getStats(s.id);
+    const[ac,bc]=avatarColor(s.id);
+    const badge=st.count===0?'<span class="badge bg-gray">ยังไม่ส่ง</span>':st.count>=5?'<span class="badge bg-green">✓ ดีมาก</span>':st.count>=3?'<span class="badge bg-green">กำลังดี</span>':'<span class="badge bg-amber">เริ่มต้น</span>';
+    return`<div class="stu-card" onclick="showStuDetail(${s.id})">
+      <div class="stu-avatar" style="background:${bc};color:${ac}">${s.nick.slice(0,1)}</div>
+      <div class="stu-nick">${s.nick}</div>
+      <div class="stu-name">${s.id}. ${s.name}</div>
+      <div class="stu-stats">
+        ${badge}
+        <span class="badge bg-coral">📝 ${st.count} ครั้ง</span>
+        ${st.totalStories?`<span class="badge bg-mint">📚 ${st.totalStories} เรื่อง</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showStuDetail(sid){
+  const s=STUDENTS.find(st=>st.id===sid);
+  const st=getStats(sid);
+  const[ac,bc]=avatarColor(sid);
+  document.getElementById('stu-list-view').style.display='none';
+  document.getElementById('stu-detail-view').style.display='block';
+  let cum1=0,cum2=0;
+  document.getElementById('stu-detail-content').innerHTML=`
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:1.25rem">
+        <div style="width:56px;height:56px;border-radius:50%;background:${bc};color:${ac};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;font-family:'Mitr',sans-serif;flex-shrink:0">${s.nick.slice(0,1)}</div>
+        <div>
+          <div style="font-size:11px;color:var(--ink-muted)">เลขที่ ${s.id}</div>
+          <div style="font-family:'Mitr',sans-serif;font-size:22px;font-weight:600;color:${ac}">${s.nick}</div>
+          <div style="font-size:14px;color:var(--ink-soft)">${s.name}</div>
+        </div>
+      </div>
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat" data-emoji="📝"><div class="stat-emoji">📝</div><div class="stat-val">${st.count} ครั้ง</div><div class="stat-lbl">ส่งทั้งหมด</div></div>
+        <div class="stat c-mint" data-emoji="📘"><div class="stat-emoji">📘</div><div class="stat-val">${st.s1.length} ครั้ง</div><div class="stat-lbl">เทอม 1</div></div>
+        <div class="stat c-sun" data-emoji="📗"><div class="stat-emoji">📗</div><div class="stat-val">${st.s2.length} ครั้ง</div><div class="stat-lbl">เทอม 2</div></div>
+        <div class="stat c-lav" data-emoji="📅"><div class="stat-emoji">📅</div><div class="stat-val" style="font-size:14px;padding-top:4px">${st.lastDate?fmtDate(st.lastDate):'—'}</div><div class="stat-lbl">ส่งล่าสุด</div></div>
+      </div>
+    </div>
+    ${['s1','s2'].map(sem=>{
+      const semRecs=st[sem].sort((a,b)=>a.round-b.round);
+      const semLabel=sem==='s1'?'📘 ภาคเรียนที่ 1':'📗 ภาคเรียนที่ 2';
+      const semColor=sem==='s1'?'var(--coral)':'var(--mint-dark)';
+      return`<div class="sem-book">
+        <div class="sem-book-title" style="color:${semColor}">${semLabel}</div>
+        ${semRecs.length?`<div class="tbl-wrap" style="border:none;border-top:1px solid var(--border)">
+          <table><thead><tr><th>ครั้งที่</th><th>วันที่</th><th class="nc">เรื่อง</th><th class="nc">รวมสะสม</th><th>หน้าที่ส่ง</th><th>คอมเม้นต์ครู</th></tr></thead>
+          <tbody>${semRecs.map(r=>`<tr>
+            <td class="nc" style="font-weight:700">${r.round}</td>
+            <td style="white-space:nowrap">${fmtDate(r.date)}</td>
+            <td class="nc">${r.stories}</td>
+            <td class="nc" style="color:#059669;font-weight:700">${r.total_stories||'—'}</td>
+            <td style="font-size:11px;color:var(--ink-muted);max-width:150px">${(r.pages||[]).length?(Array.isArray(r.pages)?r.pages:r.pages.split(',')).map(k=>{
+              const pg=[...BOOK.s1,...BOOK.s2].find(p=>p.key===k);
+              return pg?pg.ico+' '+pg.label:'';
+            }).filter(Boolean).join(', '):'—'}</td>
+            <td style="font-size:12px;color:var(--ink-soft);max-width:160px">${r.comment||'—'}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>`:
+        `<div class="empty-box" style="padding:1.5rem"><div class="ei">📭</div><p>ยังไม่มีบันทึก</p></div>`}
+      </div>`;
+    }).join('')}`;
+}
+function backToGrid(){
+  document.getElementById('stu-list-view').style.display='block';
+  document.getElementById('stu-detail-view').style.display='none';
+}
+
+// ══════════ BOOK VIEW ══════════
+let bookActiveSem=1;
+function bookSem(s){
+  bookActiveSem=s;
+  document.getElementById('book-s1-btn').className='sem-btn'+(s===1?' active-s1':'');
+  document.getElementById('book-s2-btn').className='sem-btn'+(s===2?' active-s2':'');
+  renderBook(s);
+}
+function renderBook(sem){
+  const pages=BOOK[`s${sem}`];
+  const semRecs=records.filter(r=>r.sem===sem);
+  const content=document.getElementById('book-content');
+  if(!content)return;
+
+  // count how many students submitted each page key
+  const pageCount={};
+  semRecs.forEach(r=>{
+    const pg=Array.isArray(r.pages)?r.pages:(r.pages||'').split(',').filter(Boolean);
+    pg.forEach(k=>{pageCount[k]=(pageCount[k]||0)+1;});
+  });
+
+  // group pages
+  const specials=pages.filter(p=>p.type==='special');
+  const stories=pages.filter(p=>p.type==='story');
+
+  const chipHtml=(p)=>{
+    const cnt=pageCount[p.key]||0;
+    const isDone=cnt>0;
+    return`<div class="page-chip ${isDone?'done':''}" title="${p.label} — ${cnt} คนส่งแล้ว">
+      <span class="chip-ico">${p.ico}</span>
+      <span class="chip-lbl">${p.label}</span>
+      ${cnt?`<span class="chip-cnt">${cnt}</span>`:''}
+    </div>`;
+  };
+
+  content.innerHTML=`
+    ${sem===1?`
+    <div class="sem-book">
+      <div class="sem-book-title" style="color:var(--coral)">📖 หน้าพิเศษ</div>
+      <div class="pages-grid">${specials.map(chipHtml).join('')}</div>
+    </div>
+    <div class="sem-book">
+      <div class="sem-book-title" style="color:var(--ink-soft)">📝 เรื่องที่ 1–29</div>
+      <div class="pages-grid">${stories.map(chipHtml).join('')}</div>
+    </div>` : `
+    <div class="sem-book">
+      <div class="sem-book-title" style="color:var(--ink-soft)">📝 เรื่องที่ 1–21</div>
+      <div class="pages-grid">${stories.map(chipHtml).join('')}</div>
+    </div>
+    <div class="sem-book">
+      <div class="sem-book-title" style="color:var(--mint-dark)">⭐ หน้าพิเศษ</div>
+      <div class="pages-grid">${specials.map(chipHtml).join('')}</div>
+    </div>`}
+    <div style="margin-top:1rem;font-size:12px;color:var(--ink-muted);display:flex;align-items:center;gap:8px;">
+      <div class="page-chip done" style="width:28px;height:28px;border-radius:6px;font-size:16px;flex-shrink:0"></div> = มีนักเรียนส่งแล้ว &nbsp;|&nbsp; ตัวเลขสีแดง = จำนวนนักเรียนที่ส่ง
+    </div>`;
+}
+
+// ══════════ SUMMARY ══════════
+function renderSummary(){
+  const sub=STUDENTS.filter(s=>getStats(s.id).count>0).length;
+  const totalSt=records.reduce((s,r)=>s+(r.stories||0),0);
+  const avg=sub?Math.round(totalSt/sub):0;
+  document.getElementById('ss-sub').textContent=sub;
+  document.getElementById('ss-pct').textContent=`ส่งแล้ว (${Math.round(sub/40*100)}%)`;
+  document.getElementById('ss-pages').textContent=records.reduce((s,r)=>s+(r.total_stories||0),0);
+  document.getElementById('ss-avg').textContent=avg;
+  renderDonut(sub);
+  renderTop10();
+  renderSemBars('s1',document.getElementById('s1-bars'));
+  renderSemBars('s2',document.getElementById('s2-bars'));
+  renderProgAll();
+}
+
+function renderDonut(sub){
+  const cats=[
+    {label:'ดีมาก (≥5 ครั้ง)',c:STUDENTS.filter(s=>getStats(s.id).count>=5).length,col:'#4ECDC4'},
+    {label:'กำลังดี (3–4 ครั้ง)',c:STUDENTS.filter(s=>{const n=getStats(s.id).count;return n>=3&&n<5;}).length,col:'#6BCB77'},
+    {label:'เริ่มต้น (1–2 ครั้ง)',c:STUDENTS.filter(s=>{const n=getStats(s.id).count;return n>=1&&n<3;}).length,col:'#FFD93D'},
+    {label:'ยังไม่ส่ง',c:STUDENTS.filter(s=>getStats(s.id).count===0).length,col:'#E8E4F3'},
+  ];
+  let ang=-Math.PI/2,paths='';
+  cats.forEach(ct=>{
+    if(!ct.c)return;
+    const a=(ct.c/40)*Math.PI*2;
+    const[cx,cy,r,ir]=[60,60,44,28];
+    const x1=cx+r*Math.cos(ang),y1=cy+r*Math.sin(ang);
+    const x2=cx+r*Math.cos(ang+a),y2=cy+r*Math.sin(ang+a);
+    const ix1=cx+ir*Math.cos(ang),iy1=cy+ir*Math.sin(ang);
+    const ix2=cx+ir*Math.cos(ang+a),iy2=cy+ir*Math.sin(ang+a);
+    const lg=a>Math.PI?1:0;
+    paths+=`<path d="M${x1},${y1} A${r},${r} 0 ${lg} 1 ${x2},${y2} L${ix2},${iy2} A${ir},${ir} 0 ${lg} 0 ${ix1},${iy1} Z" fill="${ct.col}" stroke="white" stroke-width="2"/>`;
+    ang+=a;
+  });
+  document.getElementById('donut-svg').innerHTML=paths+
+    `<text x="60" y="56" text-anchor="middle" font-family="Mitr,sans-serif" font-size="20" font-weight="600" fill="#1E1B2E">${sub}</text>
+     <text x="60" y="70" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="9" fill="#9491B4">คน</text>`;
+  document.getElementById('donut-leg').innerHTML=cats.map(ct=>`
+    <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:${ct.col};flex-shrink:0;"></div>
+      <span>${ct.label}</span>
+      <span style="margin-left:auto;font-weight:700;color:var(--ink)">${ct.c} คน</span>
+    </div>`).join('');
+}
+
+function renderTop10(){
+  const ranked=[...STUDENTS].map(s=>({...s,...getStats(s.id)}))
+    .filter(s=>s.count>0).sort((a,b)=>b.totalStories-a.totalStories).slice(0,10);
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('top10-list').innerHTML=ranked.length?ranked.map((s,i)=>{
+    const[ac,bc]=avatarColor(s.id);
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F3F0FF;">
+      <div style="width:28px;height:28px;border-radius:50%;background:${i<3?['#FEF3C7','#F1F5F9','#FEF3C7'][i]:bc};color:${i<3?['#92400E','#475569','#B45309'][i]:ac};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">${i<3?medals[i]:i+1}</div>
+      <div style="flex:1;overflow:hidden">
+        <div style="font-family:'Mitr',sans-serif;font-size:13px;font-weight:600">${s.nick} <span style="font-weight:400;color:var(--ink-muted);font-size:11px">${s.name.replace(/^นาย|^นางสาว/,'').trim().split(' ')[0]}</span></div>
+        <div style="font-size:11px;color:var(--ink-muted)">${s.count} ครั้ง</div>
+      </div>
+      <div style="font-family:'Mitr',sans-serif;font-size:17px;font-weight:700;color:var(--coral)">${s.totalStories}<span style="font-size:11px;font-weight:400;color:var(--ink-muted)"> เรื่อง</span></div>
+    </div>`;
+  }).join(''):`<div class="empty-box"><div class="ei">🏆</div><p>ยังไม่มีข้อมูล</p></div>`;
+}
+
+function renderSemBars(semKey,el){
+  const sem=semKey==='s1'?1:2;
+  const semRecs=records.filter(r=>r.sem===sem);
+  const maxRound=semRecs.length?Math.max(...semRecs.map(r=>r.round)):5;
+  const bars=[];
+  for(let i=1;i<=Math.max(maxRound,3);i++){
+    bars.push({round:i,cnt:new Set(semRecs.filter(r=>r.round===i).map(r=>r.sid)).size});
+  }
+  const maxCnt=Math.max(...bars.map(b=>b.cnt),1);
+  const colors=['#FF6B6B','#4ECDC4','#FFD93D','#A78BFA','#60A5FA','#6BCB77','#FFA07A','#F472B6'];
+  el.innerHTML=bars.map((b,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <div style="width:70px;font-size:12px;color:var(--ink-soft);text-align:right;flex-shrink:0">ครั้งที่ ${b.round}</div>
+      <div style="flex:1;background:#F3F0FF;border-radius:99px;height:22px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(b.cnt/maxCnt*100)}%;background:${colors[i%colors.length]};border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;transition:width .5s">
+          ${b.cnt?`<span style="font-size:11px;font-weight:700;color:white">${b.cnt} คน</span>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderProgAll(){
+  const all=[...STUDENTS].map(s=>({...s,...getStats(s.id)})).sort((a,b)=>b.totalStories-a.totalStories);
+  const maxSt=Math.max(...all.map(s=>s.totalStories),1);
+  const gradients=[
+    'linear-gradient(90deg,#FF6B6B,#FFD93D)',
+    'linear-gradient(90deg,#4ECDC4,#6BCB77)',
+    'linear-gradient(90deg,#A78BFA,#60A5FA)',
+    'linear-gradient(90deg,#FFA07A,#F472B6)',
+  ];
+  document.getElementById('prog-all').innerHTML=all.map((s,i)=>`
+    <div class="prog-row">
+      <div class="prog-name"><span style="color:var(--ink-muted);font-size:11px">${s.id}. </span><span class="prog-nick">${s.nick}</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${s.totalStories?Math.max(Math.round(s.totalStories/maxSt*100),2):0}%;background:${gradients[i%4]}"></div></div>
+      <div class="prog-val">${s.totalStories} เรื่อง</div>
+    </div>`).join('');
+}
+
+// ══════════ SETUP ══════════
+function saveGasUrl(){
+  const url=document.getElementById('gas-url').value.trim();
+  if(!url.startsWith('https://script.google.com')){showToast('URL ไม่ถูกต้อง','err');return;}
+  gasUrl=url; localStorage.setItem(LS_URL,url);
+  showToast('บันทึก URL แล้ว กำลังซิงค์...','ok'); syncCloud();
+}
+async function testConn(){
+  const url=document.getElementById('gas-url').value.trim();
+  if(!url){showToast('ใส่ URL ก่อนนะคะ','err');return;}
+  gasUrl=url;
+  const res=document.getElementById('conn-result');
+  res.textContent='⏳ กำลังทดสอบ...';
+  const data=await gasGet();
+  res.innerHTML=data!==null
+    ?`<span style="color:#059669">✅ เชื่อมต่อสำเร็จ! พบข้อมูล ${data.length} รายการ</span>`
+    :`<span style="color:var(--coral)">❌ เชื่อมต่อไม่ได้ — ตรวจสอบ URL และ permission อีกครั้ง</span>`;
+  if(data!==null)setSyncStatus('ok');
+}
+function copyScript(){
+  navigator.clipboard.writeText(document.getElementById('script-code').textContent)
+    .then(()=>showToast('คัดลอกโค้ดแล้ว ✓','ok'));
+}
+function confirmClear(){
+  if(!confirm('ลบข้อมูลทั้งหมด?'))return;
+  if(!confirm('ยืนยันอีกครั้ง?'))return;
+  records=[];nextId=1;
+  localStorage.removeItem(LS_REC);localStorage.removeItem(LS_ID);
+  renderAll();showToast('ล้างข้อมูลแล้ว');
+}
+function exportCSV(){
+  if(!records.length){showToast('ยังไม่มีข้อมูล','err');return;}
+  const BOM='\uFEFF';
+  const hdr='เลขที่,ชื่อเล่น,ชื่อนักเรียน,ภาคเรียน,ครั้งที่,วันที่,จำนวนเรื่อง,รวมสะสม,คอมเม้นต์';
+  const rows=[...records].sort((a,b)=>a.sid-b.sid||a.sem-b.sem||a.round-b.round).map(r=>{
+    const s=STUDENTS.find(st=>st.id===r.sid);
+    return`${s.id},"${s.nick}","${s.name}",${r.sem},${r.round},${r.date},${r.stories},${r.total_stories||0},"${(r.comment||'').replace(/"/g,'""')}"`;
+  });
+  const blob=new Blob([BOM+hdr+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`reading_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); showToast('Export CSV เรียบร้อย ✓','ok');
+}
+
+init();
+</script>
+</body>
+</html>
